@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Сайт донатов</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+    header { background-color: #333; color: white; text-align: center; padding: 20px; }
+    main { padding: 20px; }
+    section { margin-bottom: 40px; }
+    h2 { font-size: 24px; margin-bottom: 10px; }
+    .package {
+      background-color: #fff; padding: 15px; margin: 10px;
+      border: 1px solid #ddd; border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; width: 22%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .package:hover {
+      transform: scale(1.05);
+    }
+    button {
+      background-color: #4CAF50; color: white;
+      padding: 10px 20px; border: none;
+      border-radius: 5px; cursor: pointer;
+    }
+    button:hover { background-color: #45a049; }
+    footer { text-align: center; margin-top: 20px; }
+    .buy-button {
+      background-color: #ff5722; color: white;
+      padding: 10px 20px; border: none;
+      border-radius: 5px; cursor: pointer;
+    }
+    .buy-button:hover { background-color: #e64a19; }
+    .case-packages, .coin-packages, .donation-packages {
+      display: flex; flex-wrap: wrap; justify-content: space-around;
+    }
+    @media (max-width: 768px) { .package { width: 45%; } }
+    @media (max-width: 480px) { .package { width: 90%; } }
+    .modal {
+      display: none; position: fixed; z-index: 10;
+      left: 0; top: 0; width: 100%; height: 100%;
+      overflow: auto; background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+    }
+    .modal-content {
+      background-color: #fff; margin: 5% auto; padding: 20px;
+      border: 1px solid #888; width: 80%;
+      max-width: 600px; border-radius: 10px;
+    }
+    .close {
+      color: #aaa; font-size: 28px; font-weight: bold; float: right;
+    }
+    .close:hover, .close:focus {
+      color: black; text-decoration: none; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Сайт донатов</h1>
+  </header>
+  <main>
+    <div class="donation-packages"></div>
+    <div class="case-packages"></div>
+    <div class="coin-packages"></div>
+  </main>
+  <footer>
+    <p>&copy; 2025 Сайт донатов</p>
+  </footer>
+  <div id="donationModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modalDetails"></div>
+    </div>
+  </div>
+ 
+
+<script>
+  function closeModal() {
+    document.getElementById("donationModal").style.display = "none";
+  }
+
+  function showModal(id) {
+    const p = packages[id];
+    let html = "<h2>" + p.title + "</h2>";
+    html += "<p><strong>Цена:</strong> " + p.price + "</p>";
+    html += "<p>" + p.description + "</p>";
+    if (p.perks) {
+      html += "<h3>Преимущества:</h3><ul>" + p.perks.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+    }
+    if (p.commands) {
+      html += "<h3>Команды:</h3><ul>" + p.commands.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+    }
+    if (p.contents) {
+      html += "<h3>Содержимое:</h3><ul>" + p.contents.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+    }
+    html += '<button class="buy-button">Купить</button>';
+    document.getElementById("modalDetails").innerHTML = html;
+    document.getElementById("donationModal").style.display = "block";
+  }
+
+  const packages = {
+    warrior: {
+      title: "Воин",
+      price: "69 руб",
+      description: "Стань мощным воином на поле битвы!",
+      perks: ["лучший донат для новичка!"],
+      commands: ["/fly", "/feed", "/ec", "/seemoney", "/kit voin"]
+    },
+    supreme: {
+      title: "Суприм",
+      price: "139 руб",
+      description: "Пакет для настоящих мастеров игры!",
+      perks: ["для тех кто прошарился"],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid",
+        "/xyz", "/jump", "/weather", "/kit supreme"
+      ]
+    },
+    wither: {
+      title: "Визер",
+      price: "289 руб",
+      description: "Стань визером и управляй силами разрухи.",
+      perks: ["Доступ к креативу!"],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid",
+        "/xyz", "/jump", "/weather", "/gm (0/1/3)", "/repair",
+        "/kick", "/mute", "/kit wither"
+      ]
+    },
+    legenda: {
+      title: "Легенда",
+      price: "499 руб",
+      description: "Стань легендой и получи уникальные преимущества!",
+      perks: ["покажи насколько легендарней других"],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid", "/xyz",
+        "/jump", "/weather", "/gm (0/1/3)", "/repair", "/kick", "/mute",
+        "/giveitem", "/bantime", "/cc", "/unmute", "/time",
+        "/teleport", "/kit legend"
+      ]
+    },
+    imperator: {
+      title: "Император",
+      price: "650 руб",
+      description: "Получите статус императора и управляйте своей армией.",
+      perks: ["Глобальное превосходство над сервером."],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid", "/xyz",
+        "/jump", "/weather", "/gm (0/1/3)", "/repair", "/kick", "/mute",
+        "/giveitem", "/bantime", "/cc", "/unmute", "/time", "/teleport",
+        "/ban", "/unbantime", "/skin", "/banlist", "/pickup", "/unban",
+        "/kit imper"
+      ]
+    },
+    fantom: {
+      title: "Фантом",
+      price: "899 руб",
+      description: "Стать фантомом — получить лучшие возможности для сражений!",
+      perks: ["Уникальные способности."],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid", "/xyz", "/jump",
+        "/weather", "/gm (0/1/3)", "/repair", "/kick", "/mute", "/giveitem",
+        "/bantime", "/cc", "/unmute", "/time", "/teleport", "/ban",
+        "/unbantime", "/skin", "/banlist", "/pickup", "/unban", "/ban-ip",
+        "/topmoney", "/setwarp", "/delwarp", "/kit fantom"
+      ]
+    },
+    povelitel: {
+      title: "Повелитель",
+      price: "1000 руб",
+      description: "Этот донат дает вам дополнительные возможности для доминирования в игре.",
+      perks: ["Приоритет в матчах."],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid", "/xyz", "/jump",
+        "/weather", "/gm (0/1/3)", "/repair", "/kick", "/mute", "/giveitem",
+        "/bantime", "/cc", "/unmute", "/time", "/teleport", "/ban",
+        "/unbantime", "/skin", "/banlist", "/pickup", "/unban", "/ban-ip",
+        "/topmoney", "/setwarp", "/delwarp", "/saveinv", "/inv list",
+        "/freefly", "/effect", "/grant"
+      ]
+    },
+    vlastelin: {
+      title: "Властелин",
+      price: "2000 руб",
+      description: "Абсолютный контроль над сервером.",
+      perks: ["Вам доступно ВСЕ!"],
+      commands: [
+        "/fly", "/feed", "/ec", "/seemoney", "/itemid", "/xyz", "/jump",
+        "/weather", "/gm (0/1/3)", "/repair", "/kick", "/mute", "/giveitem",
+        "/bantime", "/cc", "/unmute", "/time", "/teleport", "/ban",
+        "/unbantime", "/skin", "/banlist", "/pickup", "/unban", "/ban-ip",
+        "/topmoney", "/setwarp", "/delwarp", "/saveinv", "/inv list",
+        "/freefly", "/effect", "/grant", "/clear", "/kill", "/freegm",
+        "/bonus", "/givemoney", "/stats", "/kit vlast"
+      ]
+    },
+    "donate-case": {
+      title: "Donate case",
+      description: "Это самый дешевый, но ценный кейс с донатами.",
+      price: "119 руб",
+      contents: ["воин", "суприм", "визер", "легенда"]
+    },
+    "epic-case": {
+      title: "Epic case",
+      description: "100% окуп",
+      price: "630 руб",
+      contents: ["легенда", "император", "фантом"]
+    },
+    "legend-case": {
+      title: "Legend case",
+      description: "Кейс с которого можно выбить 3 лучших доната!",
+      price: "999 руб",
+      contents: ["фантом", "повелитель", "властелин"]
+    },
+    "titul-case": {
+      title: "Titul case",
+      description: "Лучшие титулы сервера",
+      price: "40 руб",
+      contents: [
+        "езка","PvP","крутой","софт","фермер","богатый","ливер","трапер",
+        "таргет","1х3","грифер","ZXC","GG","qq","24/7","BAN","OLD","EZ","skill","absolute"
+      ]
+    },
+    "magic-case": {
+      title: "Magic case",
+      description: "Получите шанс выбить лучшие руны",
+      price: "50 руб",
+      contents: [
+        "rune speed 1","rune speed 2","rune power 1","rune power 2",
+        "rune fire","rune jump 1","rune jump 2","rune health","rune invis"
+      ]
+    },
+    "head-case": {
+      title: "Head case",
+      description: "Уникальный кейс с головами",
+      price: "65 руб",
+      contents: [
+        "голова зомби","голова крипера","голова дракона",
+        "голова визера","голова скелета","голова стива"
+      ]
+    },
+    "coin-case": {
+      title: "Coin case",
+      description: "Выиграй монеты!",
+      price: "60 руб",
+      contents: ["10 coin","30 coin","50 coin","70 coin","100 coin","150 coin","200 coin","300 coin"]
+    },
+    "coin-50": {
+      title: "50 coin",
+      description: "50 коинов на твой аккаунт.",
+      price: "33 руб",
+      contents: ["50 монет"]
+    },
+    "coin-70": {
+      title: "70 coin",
+      description: "70 коинов на твой аккаунт.",
+      price: "45 руб",
+      contents: ["70 монет"]
+    },
+    "coin-90": {
+      title: "90 coin",
+      description: "90 коинов на твой аккаунт.",
+      price: "60 руб",
+      contents: ["90 монет"]
+    },
+    "coin-100": {
+      title: "100 coin",
+      description: "100 коинов на твой аккаунт.",
+      price: "66 руб",
+      contents: ["100 монет"]
+    },
+    "coin-200": {
+      title: "200 coin",
+      description: "200 коинов на твой аккаунт.",
+      price: "110 руб",
+      contents: ["200 монет"]
+    },
+    "coin-300": {
+      title: "300 coin",
+      description: "300 коинов на твой аккаунт.",
+      price: "170 руб",
+      contents: ["300 монет"]
+    },
+    "coin-500": {
+      title: "500 coin",
+      description: "500 коинов на твой аккаунт.",
+      price: "280 руб",
+      contents: ["500 монет"]
+    },
+    "coin-1000": {
+      title: "1000 coin",
+      description: "1000 коинов на твой аккаунт.",
+      price: "550 руб",
+      contents: ["1000 монет"]
+    },
+    "coin-3000": {
+      title: "3000 coin",
+      description: "3000 коинов на твой аккаунт.",
+      price: "1500 руб",
+      contents: ["3000 монет"]
+    }
+  };
+
+  // Функция создания карточки
+  function createCard(id, data) {
+    const div = document.createElement("div");
+    div.className = "package";
+    div.onclick = () => showModal(id);
+    div.innerHTML = `
+      <h3>${data.title}</h3>
+      <p><strong>Цена:</strong> ${data.price || "—"}</p>
+      <p>${data.description || ""}</p>
+    `;
+    return div;
+  }
+
+  // Функция для рендеринга карточек по категориям
+  function renderPackages() {
+    const donationContainer = document.querySelector(".donation-packages");
+    const caseContainer = document.querySelector(".case-packages");
+    const coinContainer = document.querySelector(".coin-packages");
+
+    // Добавим заголовки к секциям, если надо
+    if (donationContainer) {
+      donationContainer.innerHTML = "<h2>Донаты</h2>";
+    }
+    if (caseContainer) {
+      caseContainer.innerHTML = "<h2>Кейсы</h2>";
+    }
+    if (coinContainer) {
+      coinContainer.innerHTML = "<h2>Монеты</h2>";
+    }
+
+    for (const [id, data] of Object.entries(packages)) {
+      // Определим тип пакета
+      // Донаты - у которых есть commands (без contents)
+      // Кейсы - у которых есть contents
+      // Монеты - в названии id содержит "coin" (но без contents)
+      if (data.contents) {
+        // Кейсы
+        caseContainer.appendChild(createCard(id, data));
+      } else if (id.includes("coin")) {
+        // Монеты
+        coinContainer.appendChild(createCard(id, data));
+      } else if (data.commands) {
+        // Донаты
+        donationContainer.appendChild(createCard(id, data));
+      }
+    }
+  }
+
+  // Запускаем отрисовку карточек при загрузке страницы
+  window.onload = renderPackages;
+</script>
+
+</body>
+</html>
