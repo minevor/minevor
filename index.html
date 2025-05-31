@@ -397,6 +397,16 @@ function buyNow(packageId) {
       }
     }
   }
+document.getElementById("confirmOkBtn").addEventListener("click", function() {
+  if (!pendingPackageId || !pendingNickname) {
+    alert("Что-то пошло не так. Попробуйте снова.");
+    return;
+  }
+  
+  // Можно здесь сформировать ссылку, например с параметрами, если нужно
+  // Сейчас просто редирект на твой донат по ссылке:
+  window.location.href = "https://www.donationalerts.com/r/minevorpe";
+});
 
   // Запускаем отрисовку карточек при загрузке страницы
   window.onload = renderPackages;
