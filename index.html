@@ -80,12 +80,30 @@
       <div id="modalDetails"></div>
     </div>
   </div>
- 
+ <!-- МОДАЛ ДЛЯ ПОДТВЕРЖДЕНИЯ ПЕРЕД ОПЛАТОЙ -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeConfirmModal()">&times;</span>
+    <h3>⚠ ВАЖНО!</h3>
+    <p>
+      После нажатия кнопки <strong>ОК</strong>, вы перейдёте на оплату через DonatAlerts.<br><br>
+      ✅ Введите <strong>ТОЧНУЮ СУММУ</strong> указанную в описании доната.<br>
+      📝 В комментарии к оплате укажите <strong>свой ник</strong> (например: <code>Steve</code>).<br><br>
+      ❗ В случае ошибки деньги не возвращаются, а донат не выдается.
+    </p>
+    <button id="confirmOkBtn" class="buy-button">ОК, перейти к оплате</button>
+  </div>
+</div>
+
 
 <script>
   function closeModal() {
     document.getElementById("donationModal").style.display = "none";
   }
+function closeConfirmModal() {
+  document.getElementById("confirmModal").style.display = "none";
+}
+
 
   function showModal(id) {
   const p = packages[id];
@@ -314,6 +332,9 @@
       contents: ["3000 монет"]
     }
   };
+let pendingPackageId = null;
+let pendingNickname = null;
+
 function buyNow(packageId) {
   const nickname = document.getElementById("nicknameInput").value.trim();
   if (!nickname) {
@@ -321,18 +342,11 @@ function buyNow(packageId) {
     return;
   }
 
-  const pkg = packages[packageId];
-  const title = pkg.title || packageId;
+  pendingPackageId = packageId;
+  pendingNickname = nickname;
 
-  const message = `Ник: ${nickname}, Пакет: ${title}`;
-  const encodedMsg = encodeURIComponent(message);
-
-  const priceText = pkg.price || "0";
-  const amount = parseInt(priceText.replace(/\D/g, ""), 10);
-
-  const url = `https://www.donationalerts.com/r/minevorpe?amount=${amount}&message=${encodedMsg}`;
-
-  window.open(url, "_blank");
+  // Показываем модал подтверждения
+  document.getElementById("confirmModal").style.display = "block";
 }
 
 
