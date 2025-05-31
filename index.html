@@ -88,23 +88,29 @@
   }
 
   function showModal(id) {
-    const p = packages[id];
-    let html = "<h2>" + p.title + "</h2>";
-    html += "<p><strong>Цена:</strong> " + p.price + "</p>";
-    html += "<p>" + p.description + "</p>";
-    if (p.perks) {
-      html += "<h3>Преимущества:</h3><ul>" + p.perks.map(i => "<li>" + i + "</li>").join("") + "</ul>";
-    }
-    if (p.commands) {
-      html += "<h3>Команды:</h3><ul>" + p.commands.map(i => "<li>" + i + "</li>").join("") + "</ul>";
-    }
-    if (p.contents) {
-      html += "<h3>Содержимое:</h3><ul>" + p.contents.map(i => "<li>" + i + "</li>").join("") + "</ul>";
-    }
-    html += '<button class="buy-button">Купить</button>';
-    document.getElementById("modalDetails").innerHTML = html;
-    document.getElementById("donationModal").style.display = "block";
+  const p = packages[id];
+  let html = "<h2>" + p.title + "</h2>";
+  html += "<p><strong>Цена:</strong> " + p.price + "</p>";
+  html += "<p>" + p.description + "</p>";
+  if (p.perks) {
+    html += "<h3>Преимущества:</h3><ul>" + p.perks.map(i => "<li>" + i + "</li>").join("") + "</ul>";
   }
+  if (p.commands) {
+    html += "<h3>Команды:</h3><ul>" + p.commands.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+  }
+  if (p.contents) {
+    html += "<h3>Содержимое:</h3><ul>" + p.contents.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+  }
+  
+  // Добавляем поле для ввода ника
+  html += '<p>Введите ник: <input type="text" id="nicknameInput" placeholder="Ваш ник"></p>';
+
+  // Кнопка покупки, вызывающая функцию buyNow с id пакета
+  html += `<button class="buy-button" onclick="buyNow('${id}')">Купить</button>`;
+
+  document.getElementById("modalDetails").innerHTML = html;
+  document.getElementById("donationModal").style.display = "block";
+}
 
   const packages = {
     warrior: {
@@ -308,6 +314,27 @@
       contents: ["3000 монет"]
     }
   };
+function buyNow(packageId) {
+  const nickname = document.getElementById("nicknameInput").value.trim();
+  if (!nickname) {
+    alert("Пожалуйста, введите никнейм.");
+    return;
+  }
+
+  const pkg = packages[packageId];
+  const title = pkg.title || packageId;
+
+  const message = `Ник: ${nickname}, Пакет: ${title}`;
+  const encodedMsg = encodeURIComponent(message);
+
+  const priceText = pkg.price || "0";
+  const amount = parseInt(priceText.replace(/\D/g, ""), 10);
+
+  const url = `https://www.donationalerts.com/r/minevorpe?amount=${amount}&message=${encodedMsg}`;
+
+  window.open(url, "_blank");
+}
+
 
   // Функция создания карточки
   function createCard(id, data) {
